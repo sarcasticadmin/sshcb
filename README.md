@@ -15,7 +15,7 @@ make build
 
 Create ssh_config from all `ec2` instances in `us-west-2` with user `ubuntu`:
 ```
-sshcb -r us-west-2 -u ubuntu -c ~/.ssh/config.us-west-2
+sshcb -r us-west-2 -u ubuntu -o ~/.ssh/config.us-west-2
 ssh -F ~/.ssh/config.us-west-2 coolinstance
 ```
 
