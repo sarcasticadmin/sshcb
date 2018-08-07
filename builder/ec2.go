@@ -16,6 +16,7 @@ type SSHConfigOptions struct {
 	Username     string
 	Filepath     string
 	BastionHost  string
+	PrivateOnly  bool
 	IdentityFile string
 }
 
@@ -92,14 +93,19 @@ func WriteSSHConfig(instanceList map[string]InstanceInfo, sshConfig SSHConfigOpt
 				sshConfig.Filepath,
 				sshConfig.BastionHost)
 		} else {
-			if inst.PublicIpAddress == "" {
+			var ip string
+			if inst.PublicIpAddress == "" && sshConfig.PrivateOnly == false {
 				fmt.Printf("Cannot find public IP for %s, skipping since bastion not set...\n", inst.InstanceID)
 				continue
+			} else if sshConfig.PrivateOnly == true {
+				ip = inst.PrivateIpAddress
+			} else {
+				ip = inst.PublicIpAddress
 			}
 			s += fmt.Sprintf("# %s\nHost %s\n\tHostname  %s\n\tUser  %s\n",
 				inst.InstanceID,
 				name,
-				inst.PublicIpAddress,
+				ip,
 				sshConfig.Username)
 		}
 
