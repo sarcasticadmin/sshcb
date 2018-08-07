@@ -13,9 +13,10 @@ import (
 )
 
 type SSHConfigOptions struct {
-	Username    string
-	Filepath    string
-	BastionHost string
+	Username     string
+	Filepath     string
+	BastionHost  string
+	IdentityFile string
 }
 
 type InstanceInfo struct {
@@ -100,6 +101,11 @@ func WriteSSHConfig(instanceList map[string]InstanceInfo, sshConfig SSHConfigOpt
 				name,
 				inst.PublicIpAddress,
 				sshConfig.Username)
+		}
+
+		if sshConfig.IdentityFile != "" {
+			s += fmt.Sprintf("\tIdentityFile %s\n",
+				sshConfig.IdentityFile)
 		}
 
 	}
