@@ -109,8 +109,13 @@ func WriteSSHConfig(instanceList map[string]InstanceInfo, sshConfig SSHConfigOpt
 }
 
 func GetSession(profile string, region string) *ec2.EC2 {
-	ec2svc := ec2.New(session.New(&aws.Config{Region: aws.String(region),
-		Credentials: credentials.NewSharedCredentials("", profile)}))
+	var ec2svc *ec2.EC2
+	if profile == "" {
+		ec2svc = ec2.New(session.New(&aws.Config{Region: aws.String(region)}))
+	} else {
+		ec2svc = ec2.New(session.New(&aws.Config{Region: aws.String(region),
+			Credentials: credentials.NewSharedCredentials("", profile)}))
+	}
 	return ec2svc
 }
 
