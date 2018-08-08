@@ -27,12 +27,16 @@ var rootCmd = &cobra.Command{
 		username, _ := cmd.Flags().GetString("username")
 		bastionhost, _ := cmd.Flags().GetString("bastionhost")
 		outputfile, _ := cmd.Flags().GetString("output")
+		private, _ := cmd.Flags().GetBool("private")
+		identityfile, _ := cmd.Flags().GetString("identityfile")
 		session := builder.GetSession(profile, region)
 		resp := builder.GetReservs(tags, session)
 		myConfig := builder.SSHConfigOptions{
-			Username:    username,
-			Filepath:    outputfile,
-			BastionHost: bastionhost}
+			Username:     username,
+			Filepath:     outputfile,
+			BastionHost:  bastionhost,
+			PrivateOnly:  private,
+			IdentityFile: identityfile}
 		instances := builder.BuildInstanceList(resp.Reservations)
 		builder.WriteSSHConfig(instances, myConfig)
 	},
@@ -56,11 +60,13 @@ func Execute() {
 
 func init() {
 	//cobra.OnInitialize()
-	rootCmd.PersistentFlags().StringP("region", "r", "us-east-1", "Datacenter region")
+	rootCmd.PersistentFlags().StringP("region", "r", "", "Datacenter region")
 	rootCmd.PersistentFlags().StringP("username", "u", "ec2-user", "SSH Username")
 	rootCmd.PersistentFlags().StringP("output", "o", "./config", "Output Location of SSH Config")
-	rootCmd.PersistentFlags().StringP("profile", "p", "default", "AWS profile to use from ~/.aws/credentials")
+	rootCmd.PersistentFlags().StringP("profile", "p", "", "AWS profile to use from ~/.aws/credentials")
 	rootCmd.PersistentFlags().StringP("bastionhost", "b", "", "bastion IP or hostname into AWS")
+	rootCmd.PersistentFlags().StringP("identityfile", "i", "", "IdentifyFile for ssh")
+	rootCmd.PersistentFlags().BoolP("private", "t", false, "Default to using all private IPs to build config")
 	rootCmd.PersistentFlags().StringSlice("tags", []string{}, "instance tags AWS in the form of key:value")
 	rootCmd.AddCommand(versionCmd)
 }
