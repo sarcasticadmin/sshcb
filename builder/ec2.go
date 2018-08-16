@@ -43,7 +43,7 @@ func IncrementID(name string, instanceDict map[string]InstanceInfo) string {
 			testlist[len(testlist)-1] = strconv.Itoa(ival)
 			return IncrementID(strings.Join(testlist, "-"), instanceDict)
 		} else {
-			return name + "-2"
+			return IncrementID(name+"-2", instanceDict)
 		}
 	}
 	return name

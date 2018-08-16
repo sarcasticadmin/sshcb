@@ -14,9 +14,10 @@ func TestIncrementID(t *testing.T) {
 
 func TestIncrementID2(t *testing.T) {
 	instances := map[string]InstanceInfo{
-		"test-2": InstanceInfo{InstanceID: "i-123456"},
+		"test":   InstanceInfo{InstanceID: "i-111111"},
+		"test-2": InstanceInfo{InstanceID: "i-111112"},
 	}
-	dup_instance := IncrementID("test-2", instances)
+	dup_instance := IncrementID("test", instances)
 	if dup_instance != "test-3" {
 		t.Errorf("Duplicate instnace id should append unique num, got: %s", dup_instance)
 	}
