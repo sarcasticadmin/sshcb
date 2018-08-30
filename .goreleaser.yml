@@ -1,0 +1,35 @@
+project_name: sshcb
+
+builds:
+  - binary: sshcb
+    goos:
+      - darwin
+      - linux
+      - freebsd
+    goarch:
+      - amd64
+      - 386
+
+git:
+  short_hash: true
+
+archive:
+  name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}'
+  format: tar.gz
+
+snapshot:
+  name_template: "{{ .ProjectName }}_SNAPSHOT-{{.Commit}}"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - Merge pull request
+    - Merge branch
+
+release:
+  github:
+    owner: sarcasticadmin
+    name: sshcb
+  # If set to true, will mark the release as not ready for production.
+  prerelease: true
