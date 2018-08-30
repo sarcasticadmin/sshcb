@@ -77,7 +77,7 @@ func init() {
 	rootCmd.PersistentFlags().StringP("profile", "p", "", "AWS profile to use from ~/.aws/credentials")
 	rootCmd.PersistentFlags().StringP("bastionhost", "b", "", "bastion IP or hostname into AWS")
 	rootCmd.PersistentFlags().StringP("identityfile", "i", "", "IdentifyFile for ssh")
-	rootCmd.PersistentFlags().BoolP("private", "t", false, "Default to using all private IPs to build config")
+	rootCmd.PersistentFlags().Bool("private", false, "Default to using all private IPs to build config")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "esoteric output")
 	rootCmd.PersistentFlags().StringSlice("tags", []string{}, "instance tags AWS in the form of key:value")
 	rootCmd.AddCommand(versionCmd)
