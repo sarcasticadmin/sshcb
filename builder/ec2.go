@@ -2,14 +2,16 @@ package builder
 
 import (
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ec2"
 	"log"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ec2"
+	"github.com/sarcasticadmin/sshcb/logs"
 )
 
 type SSHConfigOptions struct {
@@ -51,7 +53,7 @@ func IncrementID(name string, instanceDict map[string]InstanceInfo) string {
 func BuildInstanceList(reservations []*ec2.Reservation) map[string]InstanceInfo {
 	instances := make(map[string]InstanceInfo)
 	for idx, res := range reservations {
-		fmt.Println("  > Reservation Id", *res.ReservationId, " Num Instances: ", len(res.Instances))
+		logs.INFO.Println("  > Reservation Id", *res.ReservationId, " Num Instances: ", len(res.Instances))
 		for _, inst := range reservations[idx].Instances {
 			aID := InstanceInfo{
 				InstanceID:       *inst.InstanceId,
@@ -95,7 +97,7 @@ func WriteSSHConfig(instanceList map[string]InstanceInfo, sshConfig SSHConfigOpt
 		} else {
 			var ip string
 			if inst.PublicIpAddress == "" && sshConfig.PrivateOnly == false {
-				fmt.Printf("Cannot find public IP for %s, skipping since bastion not set...\n", inst.InstanceID)
+				logs.WARN.Printf("Cannot find public IP for %s, skipping since bastion not set...\n", inst.InstanceID)
 				continue
 			} else if sshConfig.PrivateOnly == true {
 				ip = inst.PrivateIpAddress
@@ -116,7 +118,8 @@ func WriteSSHConfig(instanceList map[string]InstanceInfo, sshConfig SSHConfigOpt
 
 	}
 	newconfig, err := f.WriteString(s)
-	fmt.Printf("wrote %d bytes\n", newconfig)
+	logs.INFO.Printf("wrote %d bytes\n", newconfig)
+	logs.FEEDBACK.Printf("Created ssh config at %s\n", sshConfig.Filepath)
 	f.Sync()
 }
 
@@ -132,7 +135,8 @@ func GetSession(profile string, region string) *ec2.EC2 {
 }
 
 func GetReservs(tags map[string]string, ec2svc *ec2.EC2) *ec2.DescribeInstancesOutput {
-	fmt.Println(tags)
+	logs.INFO.Println(tags)
+	//fmt.Println(tags)
 	filters := []*ec2.Filter{}
 
 	// We only care about running/pending instances
@@ -149,7 +153,7 @@ func GetReservs(tags map[string]string, ec2svc *ec2.EC2) *ec2.DescribeInstancesO
 		})
 	}
 
-	fmt.Println(filters)
+	//logs.INFO.Printf(filters)
 	params := &ec2.DescribeInstancesInput{
 		Filters: filters,
 	}
@@ -165,7 +169,7 @@ func GetReservs(tags map[string]string, ec2svc *ec2.EC2) *ec2.DescribeInstancesO
 	*/
 	resp, err := ec2svc.DescribeInstances(params)
 	if err != nil {
-		fmt.Println("there was an error listing instances in", err.Error())
+		logs.FATAL.Printf("there was an error listing instances in", err.Error())
 		log.Fatal(err.Error())
 	}
 	return resp
