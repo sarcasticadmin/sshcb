@@ -157,16 +157,6 @@ func GetReservs(tags map[string]string, ec2svc *ec2.EC2) *ec2.DescribeInstancesO
 	params := &ec2.DescribeInstancesInput{
 		Filters: filters,
 	}
-	/*
-		params := &ec2.DescribeInstancesInput{
-			Filters: []*ec2.Filter{
-				{
-					Name:   aws.String("instance-state-name"),
-					Values: []*string{aws.String("running"), aws.String("pending")},
-				},
-			},
-		}
-	*/
 	resp, err := ec2svc.DescribeInstances(params)
 	if err != nil {
 		logs.FATAL.Printf("there was an error listing instances in", err.Error())
