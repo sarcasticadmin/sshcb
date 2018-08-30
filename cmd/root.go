@@ -6,14 +6,18 @@ import (
 	"strings"
 
 	"github.com/sarcasticadmin/sshcb/builder"
+	"github.com/sarcasticadmin/sshcb/logs"
 	"github.com/spf13/cobra"
 )
+
+var verbose bool
 
 var rootCmd = &cobra.Command{
 	Use:   "sshcb",
 	Short: "sshcb can easy way to build ssh_configs",
 	Long: `Connect to your environment quickly and easily
 	       by querying a cloud api and building an ssh_config`,
+	PersistentPreRun: VerboseOutput,
 	Run: func(cmd *cobra.Command, args []string) {
 		rawtags, _ := cmd.Flags().GetStringSlice("tags")
 		tags := make(map[string]string)
@@ -58,6 +62,13 @@ func Execute() {
 	}
 }
 
+// enable verbose on logs package
+func VerboseOutput(cmd *cobra.Command, args []string) {
+	if verbose {
+		logs.EnableInfo()
+	}
+}
+
 func init() {
 	//cobra.OnInitialize()
 	rootCmd.PersistentFlags().StringP("region", "r", "", "Datacenter region")
@@ -66,7 +77,8 @@ func init() {
 	rootCmd.PersistentFlags().StringP("profile", "p", "", "AWS profile to use from ~/.aws/credentials")
 	rootCmd.PersistentFlags().StringP("bastionhost", "b", "", "bastion IP or hostname into AWS")
 	rootCmd.PersistentFlags().StringP("identityfile", "i", "", "IdentifyFile for ssh")
-	rootCmd.PersistentFlags().BoolP("private", "t", false, "Default to using all private IPs to build config")
+	rootCmd.PersistentFlags().Bool("private", false, "Default to using all private IPs to build config")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "esoteric output")
 	rootCmd.PersistentFlags().StringSlice("tags", []string{}, "instance tags AWS in the form of key:value")
 	rootCmd.AddCommand(versionCmd)
 }
