@@ -10,6 +10,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Version identifier populated via the CI/CD process.
+var Version = "HEAD"
+
 var verbose bool
 
 var rootCmd = &cobra.Command{
@@ -51,7 +54,7 @@ var versionCmd = &cobra.Command{
 	Short: "Print the version number of SSHcb",
 	Long:  `All software has versions. This is SSHcb`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("v0.0")
+		fmt.Println(Version)
 	},
 }
 

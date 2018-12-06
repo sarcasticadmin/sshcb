@@ -7,10 +7,14 @@ GOGET=$(GOCMD) get
 BINARY_NAME=sshcb
 TEST_DIRS = builder
 
+PKG := github.com/sarcasticadmin/sshcb
+VERSION := $(shell git describe --dirty)
+LDFLAGS := -X $(PKG)/cmd.Version=$(VERSION)
+
 all: build
 
 build:
-	$(GOBUILD) -o $(BINARY_NAME) -v
+	$(GOBUILD) -o $(BINARY_NAME) -v -ldflags="$(LDFLAGS)"
 clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
