@@ -159,7 +159,7 @@ func GetReservs(tags map[string]string, ec2svc *ec2.EC2) *ec2.DescribeInstancesO
 	}
 	resp, err := ec2svc.DescribeInstances(params)
 	if err != nil {
-		logs.FATAL.Printf("there was an error listing instances in", err.Error())
+		logs.FATAL.Printf("there was an error listing instances in: %s", err.Error())
 		log.Fatal(err.Error())
 	}
 	return resp
