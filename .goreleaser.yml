@@ -9,6 +9,8 @@ builds:
     goarch:
       - amd64
       - 386
+    ldflags:
+      - -s -w -X cmd.Version={{.Version}}
 
 git:
   short_hash: true
@@ -16,6 +18,8 @@ git:
 archive:
   name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}'
   format: tar.gz
+  files:
+    - none*
 
 snapshot:
   name_template: "{{ .ProjectName }}_SNAPSHOT-{{.Commit}}"
