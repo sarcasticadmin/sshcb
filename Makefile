@@ -20,3 +20,6 @@ clean:
 	rm -f $(BINARY_NAME)
 test:
 	$(GOTEST) -v -cover ./builder
+
+test-release:
+	goreleaser release --rm-dist --skip-publish --skip-validate
