@@ -18,6 +18,8 @@ git:
 archive:
   name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}'
   format: tar.gz
+  files:
+    - none*
 
 snapshot:
   name_template: "{{ .ProjectName }}_SNAPSHOT-{{.Commit}}"
