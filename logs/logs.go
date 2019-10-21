@@ -9,15 +9,13 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-
-	"github.com/bogem/nehm/color"
 )
 
 var (
 	INFO     = log.New(ioutil.Discard, "", 0)
-	WARN     = log.New(os.Stdout, color.YellowString("WARN: "), 0)
-	ERROR    = log.New(os.Stderr, color.RedString("ERROR: "), 0)
-	FATAL    = log.New(os.Stderr, color.RedString("FATAL ERROR: "), 0)
+	WARN     = log.New(os.Stdout, YellowString("WARN: "), 0)
+	ERROR    = log.New(os.Stderr, RedString("ERROR: "), 0)
+	FATAL    = log.New(os.Stderr, RedString("FATAL ERROR: "), 0)
 	FEEDBACK = new(feedback)
 )
 
