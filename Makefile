@@ -19,7 +19,7 @@ clean:
 	$(GOCLEAN)
 	rm -f $(BINARY_NAME)
 test:
-	$(GOTEST) -v -cover ./builder
+	$(GOTEST) -v -cover ./...
 
 test-release:
 	goreleaser release --rm-dist --skip-publish --skip-validate
