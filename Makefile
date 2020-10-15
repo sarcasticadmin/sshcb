@@ -23,3 +23,7 @@ test:
 
 test-release:
 	goreleaser release --rm-dist --skip-publish --skip-validate
+
+# Using 0.95.2 of goreleaser
+release:
+	gorelease release
